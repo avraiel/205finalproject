@@ -11,3 +11,5 @@ All source code that was used for this project is found in this repository. Each
 1. This project uses .env file. If you plan on running this, consult the source code on the necessary environmental variables.
 2. Make sure to have the database set up. Tables are automatically created by the python files, but source code needs to connect to a PostgreSQL Database with pgVector enabled.
 3. Install the requirements.txt file first.
+
+Please contact Gab for data used and db.sqlite files.
