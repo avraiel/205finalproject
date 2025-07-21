@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Text Embedding App</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa, #c3cfe2);
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .container {
+            background-color: white;
+            padding: 40px;
+            margin: 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            resize: vertical;
+            box-sizing: border-box;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 12px 25px;
+            font-size: 16px;
+            background-color: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #357ab7;
+        }
+
+        .results {
+            margin-top: 30px;
+        }
+
+        .results h2 {
+            color: #444;
+        }
+
+        .results ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .results li {
+            background: #f0f4f8;
+            margin: 8px 0;
+            padding: 10px 15px;
+            border-radius: 6px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 15px;
+            background-color: #ffffff;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f4f6f8;
+            font-weight: 600;
+            color: #333;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #eef1f5;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>RAG Database Query</h1>
+        <form method="POST">
+            <textarea name="prompt" placeholder="Enter your prompt here..." >{{ prompt }}</textarea>
+            <p><input type="checkbox" name="lite" id="lite" value="lite" {% if lite %} checked {% endif %}>
+            <label for="lite">Remove metadata</label></p>
+            <p> 
+                Select RAG Database:<br>
+                <input type="radio" id="all-mpnet-base-v2" name="model" value="mpnet" required {% if model == "mpnet" %} checked {% endif %}>
+                <label for="all-mpnet-base-v2">all-mpnet-base-v2</label><br>
+                <input type="radio" id="dost-asti" name="model" value="dost" {% if model == "dost" %} checked {% endif %}>
+                <label for="dost-asti">dost-asti/RoBERTa-tl-cased</label><br>
+                <input type="radio" id="jcblaise" name="model" value="jcblaise" {% if model == "jcblaise" %} checked {% endif %}>
+                <label for="jcblaise">jcblaise/roberta-tagalog-base</label><br>
+                <input type="radio" id="openai" name="model" value="openai" {% if model == "openai" %} checked {% endif %}>
+                <label for="openai">text-embedding-3-small</label><br>
+                <i>RAG Databases are built with the selected model.</i> 
+            </p>
+            <button type="submit">Submit</button>
+            
+            
+        </form>
+
+        {% if result %}
+            <div class="results">
+                <h2>Query Result:</h2>
+                <table>
+                    <tr>
+                        <th>ID</th>
+                        <th>Article Title</th>
+                        <th>Website</th>
+                        <th>Date</th>
+                        <th>Vector Distance</th>
+                        <th>URL</th>
+                        <th>Content</th>
+                    </tr>
+                    {% for row in result %}
+                        <tr>
+                            {% for item in row %}
+                                <td>{{ item }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                    <tr>
+                        <th colspan="4">Mean of Vector Distance</th>
+                        <td colspan="3">{{ average }}</td>
+                    </tr>
+                </table>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
